@@ -150,26 +150,39 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    data     = request.get_json() or {}
-    email    = data.get('email', '').strip().lower()
-    password = data.get('password', '')
+    data       = request.get_json() or {}
+    # Accept student_id as the primary key (simple login form).
+    # Still accepts 'email' for backward-compatibility with older callers.
+    student_id = data.get('student_id', '').strip().upper()
+    email      = data.get('email', '').strip().lower()
+    password   = data.get('password', '')
+
+    if not password or (not student_id and not email):
+        return jsonify({"error": "Student ID and password are required"}), 400
 
     cur = mysql.connection.cursor()
-    cur.execute(
-        "SELECT student_id, name, password, disability, total_coins FROM students WHERE email=%s",
-        [email]
-    )
+    if student_id:
+        cur.execute(
+            "SELECT student_id, name, email, password, disability, total_coins FROM students WHERE student_id=%s",
+            [student_id]
+        )
+    else:
+        cur.execute(
+            "SELECT student_id, name, email, password, disability, total_coins FROM students WHERE email=%s",
+            [email]
+        )
     user = cur.fetchone()
 
-    if user and bcrypt.checkpw(password.encode(), user[2].encode()):
+    if user and bcrypt.checkpw(password.encode(), user[3].encode()):
         return jsonify({
             "student_id":  user[0],
             "name":        user[1],
-            "disability":  user[3],
-            "total_coins": user[4] or 0
+            "email":       user[2],
+            "disability":  user[4],
+            "total_coins": user[5] or 0
         })
 
-    return jsonify({"error": "Invalid email or password"}), 401
+    return jsonify({"error": "Invalid Student ID or password"}), 401
 
 
 # ═══════════════════════════════════════════════════

@@ -7,9 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Lexend:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Chart.js (CDN) — used for all dashboard/report charts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<!-- SheetJS (CDN) — used to generate the downloadable .xlsx files -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{
@@ -35,7 +33,6 @@ input,select,textarea{font-family:inherit;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-thumb{background:#252d45;border-radius:6px;}
 
-/* ============ AUTH GATE ============ */
 #authGate{min-height:100vh;position:relative;display:none;}
 .blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.35;z-index:0;pointer-events:none;}
 .blob--a{width:480px;height:480px;background:var(--accent);top:-160px;right:-140px;animation:drift1 22s ease-in-out infinite;}
@@ -68,7 +65,6 @@ legend{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(
 .section-gap{margin-top:18px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* ============ SHARED FORM/BUTTON PRIMITIVES ============ */
 .field{margin-bottom:13px;}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;letter-spacing:.01em;}
 .field input,.field select,.field textarea{
@@ -102,7 +98,6 @@ legend{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(
 .btn-sm{padding:6px 11px;font-size:12px;}
 .btn-link{background:none;border:none;color:var(--accent);font-size:12.5px;padding:0;}
 
-/* ============ APP SHELL ============ */
 #appShell{display:none;}
 .shell{display:flex;min-height:100vh;}
 .main-wrap{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column;}
@@ -268,9 +263,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
 </head>
 <body>
 
-<!-- ================================================================
-     AUTH GATE — Login / Register
-================================================================ -->
 <div id="authGate">
   <div class="blob blob--a"></div>
   <div class="blob blob--b"></div>
@@ -288,7 +280,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         <button class="ag-tab" id="tabRegisterBtn" onclick="switchAuthTab('register')">Register School</button>
       </div>
 
-      <!-- LOGIN -->
       <div class="ag-panel active" id="loginPanel">
         <h1>Admin Console</h1>
         <p class="ag-lede">Sign in with your Admin ID to manage your school on ESLD.</p>
@@ -315,7 +306,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         <p class="ag-seednote">No admin account yet on this device? Switch to <strong>Register School</strong> — a demo account is also seeded automatically: ID <code>AID-DEMO-01</code> / password <code>admin1234</code>.</p>
       </div>
 
-      <!-- REGISTER -->
       <div class="ag-panel" id="registerPanel">
         <h1>Register your school</h1>
         <p class="ag-lede">This creates the School Admin account. Your Admin ID is generated automatically.</p>
@@ -368,9 +358,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
   </div>
 </div>
 
-<!-- ================================================================
-     APP SHELL — Dashboard SPA (shown after login)
-================================================================ -->
 <div id="appShell">
 <div class="shell">
 
@@ -444,7 +431,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
 
     <div class="page-content">
 
-      <!-- DASHBOARD -->
       <section class="view active" id="view-dashboard">
         <div class="stat-row">
           <div class="stat-card sc-green">
@@ -481,7 +467,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
       </section>
 
-      <!-- TEACHERS -->
       <section class="view" id="view-teachers">
         <div class="stat-row" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card sc-blue"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><div class="stat-val" id="t-total">0</div><div class="stat-lbl">Total Teachers</div></div>
@@ -490,7 +475,7 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
         <div class="sec-card">
           <div class="sc-head">
-            <div><h2>All Teachers</h2><p>Add, edit or remove teachers. A Teacher ID &amp; password are generated automatically when you add one — download them below.</p></div>
+            <div><h2>All Teachers</h2><p>Add, edit or remove teachers. A Teacher ID &amp; password are generated automatically when you add one — download them below and hand them to the teacher, who logs in at <strong>teacher-login.html</strong>.</p></div>
             <div class="toolbar no-print">
               <div class="srch-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="srch" id="t-srch" placeholder="Name, ID, subject…" oninput="renderTeachers()"></div>
               <select class="sel" id="t-filter" onchange="renderTeachers()"><option value="">All Subjects</option></select>
@@ -505,7 +490,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
       </section>
 
-      <!-- STUDENTS -->
       <section class="view" id="view-students">
         <div class="stat-row" style="grid-template-columns:repeat(4,1fr)">
           <div class="stat-card sc-green"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Total Students</div></div>
@@ -515,7 +499,7 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
         <div class="sec-card">
           <div class="sc-head">
-            <div><h2>All Students</h2><p>Didn't self-register? Add them here — a Student ID is generated and the default password is <code style="font-family:'JetBrains Mono',monospace;background:var(--panel2);padding:1px 6px;border-radius:5px;color:var(--accent);">ESLD@123</code>. The Export button below never includes teacher IDs or passwords.</p></div>
+            <div><h2>All Students</h2><p>Didn't self-register? Add them here — a Student ID like <code style="font-family:'JetBrains Mono',monospace;background:var(--panel2);padding:1px 6px;border-radius:5px;color:var(--accent);">ESLD0001ST</code> is generated and the default password is <code style="font-family:'JetBrains Mono',monospace;background:var(--panel2);padding:1px 6px;border-radius:5px;color:var(--accent);">ESLD@123</code>. Students log in at <strong>student-login.html</strong>, parents just enter this Student ID at <strong>parent-login.html</strong>.</p></div>
             <div class="toolbar no-print">
               <div class="srch-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="srch" id="s-srch" placeholder="Name, ID, class…" oninput="renderStudents()"></div>
               <select class="sel" id="s-filter-need" onchange="renderStudents()"><option value="">All Needs</option><option>Dyslexia</option><option>Dysgraphia</option><option>ADHD</option><option>Dyscalculia</option></select>
@@ -531,7 +515,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
       </section>
 
-      <!-- PARENTS -->
       <section class="view" id="view-parents">
         <div class="stat-row" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card sc-pink"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5 5 0 0 0-7.07 0L12 5.34l-1.73-1.74a5 5 0 1 0-7.07 7.07L12 19.34l8.8-8.67a5 5 0 0 0 0-7.07Z"/></svg></div><div class="stat-val" id="p-total">0</div><div class="stat-lbl">Total Parents</div></div>
@@ -540,7 +523,7 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
         <div class="sec-card">
           <div class="sc-head">
-            <div><h2>All Parents</h2><p>Add, edit or remove parent records and link them to their child's student profile.</p></div>
+            <div><h2>All Parents</h2><p>Optional — parents don't need an account here at all. They can just go to <strong>parent-login.html</strong> and enter their child's Student ID directly. Use this list only if you want to keep a record of parent contact details.</p></div>
             <div class="toolbar no-print">
               <div class="srch-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="srch" id="p-srch" placeholder="Name, ID, mobile…" oninput="renderParents()"></div>
               <button class="btn btn-primary" onclick="openParentModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add Parent</button>
@@ -550,7 +533,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
       </section>
 
-      <!-- REPORTS -->
       <section class="view" id="view-reports">
         <div class="sec-card no-print" style="margin-bottom:18px;">
           <div class="sc-head" style="border-bottom:none;padding-bottom:16px;">
@@ -575,7 +557,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
         </div>
       </section>
 
-      <!-- SETTINGS -->
       <section class="view" id="view-settings">
         <div class="settings-grid">
           <div class="sec-card" style="overflow:visible;">
@@ -633,9 +614,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
 </div>
 </div>
 
-<!-- ================================================================
-     MODALS
-================================================================ -->
 <div class="modal-bg" id="modal-teacher">
   <div class="modal">
     <div class="modal-title"><span id="t-modal-title">Add Teacher</span><button class="modal-x" onclick="closeModal('modal-teacher')">×</button></div>
@@ -676,7 +654,7 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
       <div class="field"><label>Student Email</label><input id="s-email" type="email" placeholder="student@example.com"></div>
       <div class="field"><label>Parent Mobile</label><input id="s-pmobile" inputmode="numeric" maxlength="10" placeholder="98765 43210"></div>
     </div>
-    <p class="hint" id="s-pw-hint">This student will log in with the Student ID shown after saving, and default password <strong>ESLD@123</strong>.</p>
+    <p class="hint" id="s-pw-hint">This student will log in at student-login.html with the Student ID shown after saving, and default password <strong>ESLD@123</strong>. A parent can watch their progress at parent-login.html using that same Student ID.</p>
     <div class="modal-foot">
       <button class="btn btn-ghost" id="s-reset-pw-btn" style="display:none;" onclick="resetStudentPassword()">Reset Password</button>
       <button class="btn btn-ghost" onclick="closeModal('modal-student')">Cancel</button>
@@ -714,7 +692,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
   </div>
 </div>
 
-<!-- Credentials reveal modal — shown right after creating/resetting a student or teacher account -->
 <div class="modal-bg" id="modal-credentials">
   <div class="modal sm" style="text-align:center;">
     <div style="font-size:38px;margin-bottom:10px;">🔑</div>
@@ -738,12 +715,6 @@ tbody tr:hover{background:rgba(255,255,255,0.018);}
 'use strict';
 const $ = (s) => document.querySelector(s);
 
-/* ═══════════════════════════════════════════════════════════════
-   STORAGE KEYS
-   NOTE: K.S deliberately uses the SAME key ('esld-students') as
-   student-login.html, so students the admin creates here can log
-   in from that page immediately.
-═══════════════════════════════════════════════════════════════ */
 const ADMIN_KEY = 'esld-admins';
 const SESSION_KEY = 'esld-session';
 const DEFAULT_STUDENT_PW = 'ESLD@123';
@@ -770,16 +741,20 @@ function genAid(schoolCode){
   do { id = `AID-${code}-${String(n).padStart(2,'0')}`; n++; } while(existing.some(a=>a.aid===id));
   return id;
 }
-/* Random password generator — used for auto-created Teacher accounts */
 function genPassword(len=8){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
   let p=''; for(let i=0;i<len;i++) p+=chars[Math.floor(Math.random()*chars.length)];
   return p;
 }
+/* Student IDs are ESLD0001ST style — the SAME format used by student-login.html,
+   student-dashboard.html, student-progress.html and parent-login.html, so a Student
+   ID created here works identically everywhere else in the app. */
+function genStudentId(list){
+  const nums = list.map(x=>{ const m=(x.sid||'').match(/ESLD(\d+)ST/); return m?parseInt(m[1],10):0; });
+  const n = (nums.length ? Math.max(...nums) : 0) + 1;
+  return 'ESLD'+String(n).padStart(4,'0')+'ST';
+}
 
-/* ═══════════════════════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════════════════════ */
 const ICONS = {
   success:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
   error:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>`,
@@ -794,9 +769,6 @@ function toast(msg, type='info', ms=3000){
   setTimeout(()=>{ el.classList.add('out'); el.addEventListener('animationend',()=>el.remove()); }, ms);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   AUTH GATE — Login / Register / Forgot Password
-═══════════════════════════════════════════════════════════════ */
 async function seedDemoAdmin(){
   const admins = get(ADMIN_KEY);
   if(!admins.some(a => a.aid === 'AID-DEMO-01')){
@@ -933,9 +905,6 @@ function doLogout(){
   setTimeout(showAuthGate, 500);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   GATE SWITCHING
-═══════════════════════════════════════════════════════════════ */
 function showAuthGate(){
   document.getElementById('authGate').style.display = 'block';
   document.getElementById('appShell').style.display = 'none';
@@ -961,15 +930,6 @@ function bootApp(){
   renderDashboard();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SEED DEMO APP DATA (teachers/students/parents/classes/settings)
-   NOTE: the demo students (SID001–SID008) now start at accuracy:0,
-   coins:0, active:false — they are DEMO NAMES/CLASSES/NEEDS only, so
-   the Admin console isn't a totally empty table on first load, but
-   they carry ZERO fake progress. Real progress only ever comes from
-   a student actually playing a game (localStorage 'coins-*' /
-   'ml-history-*'), same as any student a teacher/admin adds later.
-═══════════════════════════════════════════════════════════════ */
 async function seedAppData(){
   if(!get(K.T).length) set(K.T,[
     {tid:'TID001',name:'Anita Krishnan',  subject:'Special Education',  email:'anita@demo.esld', mobile:'9811122233',joinDate:'2024-06-01',password:genPassword()},
@@ -980,20 +940,20 @@ async function seedAppData(){
   if(!get(K.S).length){
     const demoHash = await sha256(DEFAULT_STUDENT_PW);
     set(K.S,[
-      {sid:'SID001',name:'Aarav Singh',  classGrade:'5-A',need:'Dyslexia',  teacherTid:'TID003',accuracy:0,coins:0,active:false, age:11,gender:'Male',  email:'aarav@s.esld',  studentEmail:'aarav@s.esld',  pMobile:'9900011111',parentMobile:'9900011111',joinDate:'2024-06-15',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID002',name:'Diya Patel',   classGrade:'6-B',need:'Dysgraphia',teacherTid:'TID001',accuracy:0,coins:0,active:false, age:12,gender:'Female',email:'diya@s.esld',   studentEmail:'diya@s.esld',   pMobile:'9900022222',parentMobile:'9900022222',joinDate:'2024-06-18',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID003',name:'Kabir Rao',    classGrade:'4-A',need:'ADHD',      teacherTid:'TID002',accuracy:0,coins:0,active:false,age:10,gender:'Male',  email:'kabir@s.esld',  studentEmail:'kabir@s.esld',  pMobile:'9900033333',parentMobile:'9900033333',joinDate:'2024-07-02',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID004',name:'Meera Iyer',   classGrade:'7-C',need:'Dyscalculia',teacherTid:'TID002',accuracy:0,coins:0, active:false,age:13,gender:'Female',email:'meera@s.esld',  studentEmail:'meera@s.esld',  pMobile:'9900044444',parentMobile:'9900044444',joinDate:'2024-07-10',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID005',name:'Vivaan Joshi', classGrade:'5-A',need:'Dyslexia',  teacherTid:'TID003',accuracy:0,coins:0,active:false, age:11,gender:'Male',  email:'vivaan@s.esld', studentEmail:'vivaan@s.esld', pMobile:'9900055555',parentMobile:'9900055555',joinDate:'2024-08-05',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID006',name:'Ira Nair',     classGrade:'6-B',need:'ADHD',      teacherTid:'TID001',accuracy:0,coins:0,active:false, age:12,gender:'Female',email:'ira@s.esld',    studentEmail:'ira@s.esld',    pMobile:'9900066666',parentMobile:'9900066666',joinDate:'2024-08-20',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID007',name:'Aryan Sharma', classGrade:'4-A',need:'Dyslexia',  teacherTid:'TID003',accuracy:0,coins:0,active:false, age:10,gender:'Male',  email:'aryan@s.esld',  studentEmail:'aryan@s.esld',  pMobile:'9900077777',parentMobile:'9900077777',joinDate:'2025-01-05',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
-      {sid:'SID008',name:'Nisha Reddy',  classGrade:'7-C',need:'Dysgraphia',teacherTid:'TID004',accuracy:0,coins:0,active:false, age:13,gender:'Female',email:'nisha@s.esld',  studentEmail:'nisha@s.esld',  pMobile:'9900088888',parentMobile:'9900088888',joinDate:'2025-01-12',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0001ST',name:'Aarav Singh',  classGrade:'5-A',need:'Dyslexia',  teacherTid:'TID003',accuracy:0,coins:0,active:false, age:11,gender:'Male',  email:'aarav@s.esld',  studentEmail:'aarav@s.esld',  pMobile:'9900011111',parentMobile:'9900011111',joinDate:'2024-06-15',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0002ST',name:'Diya Patel',   classGrade:'6-B',need:'Dysgraphia',teacherTid:'TID001',accuracy:0,coins:0,active:false, age:12,gender:'Female',email:'diya@s.esld',   studentEmail:'diya@s.esld',   pMobile:'9900022222',parentMobile:'9900022222',joinDate:'2024-06-18',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0003ST',name:'Kabir Rao',    classGrade:'4-A',need:'ADHD',      teacherTid:'TID002',accuracy:0,coins:0,active:false,age:10,gender:'Male',  email:'kabir@s.esld',  studentEmail:'kabir@s.esld',  pMobile:'9900033333',parentMobile:'9900033333',joinDate:'2024-07-02',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0004ST',name:'Meera Iyer',   classGrade:'7-C',need:'Dyscalculia',teacherTid:'TID002',accuracy:0,coins:0, active:false,age:13,gender:'Female',email:'meera@s.esld',  studentEmail:'meera@s.esld',  pMobile:'9900044444',parentMobile:'9900044444',joinDate:'2024-07-10',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0005ST',name:'Vivaan Joshi', classGrade:'5-A',need:'Dyslexia',  teacherTid:'TID003',accuracy:0,coins:0,active:false, age:11,gender:'Male',  email:'vivaan@s.esld', studentEmail:'vivaan@s.esld', pMobile:'9900055555',parentMobile:'9900055555',joinDate:'2024-08-05',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0006ST',name:'Ira Nair',     classGrade:'6-B',need:'ADHD',      teacherTid:'TID001',accuracy:0,coins:0,active:false, age:12,gender:'Female',email:'ira@s.esld',    studentEmail:'ira@s.esld',    pMobile:'9900066666',parentMobile:'9900066666',joinDate:'2024-08-20',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0007ST',name:'Aryan Sharma', classGrade:'4-A',need:'Dyslexia',  teacherTid:'TID003',accuracy:0,coins:0,active:false, age:10,gender:'Male',  email:'aryan@s.esld',  studentEmail:'aryan@s.esld',  pMobile:'9900077777',parentMobile:'9900077777',joinDate:'2025-01-05',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
+      {sid:'ESLD0008ST',name:'Nisha Reddy',  classGrade:'7-C',need:'Dysgraphia',teacherTid:'TID004',accuracy:0,coins:0,active:false, age:13,gender:'Female',email:'nisha@s.esld',  studentEmail:'nisha@s.esld',  pMobile:'9900088888',parentMobile:'9900088888',joinDate:'2025-01-12',passwordHash:demoHash,pwPlain:DEFAULT_STUDENT_PW},
     ]);
   }
   if(!get(K.P).length) set(K.P,[
-    {pid:'PID001',name:'Suresh Singh',  mobile:'9900011122',email:'suresh@example.com', studentSid:'SID001'},
-    {pid:'PID002',name:'Kavya Patel',   mobile:'9900022233',email:'kavya@example.com',  studentSid:'SID002'},
-    {pid:'PID003',name:'Rajiv Rao',     mobile:'9900033344',email:'rajiv@example.com',  studentSid:'SID003'},
+    {pid:'PID001',name:'Suresh Singh',  mobile:'9900011122',email:'suresh@example.com', studentSid:'ESLD0001ST'},
+    {pid:'PID002',name:'Kavya Patel',   mobile:'9900022233',email:'kavya@example.com',  studentSid:'ESLD0002ST'},
+    {pid:'PID003',name:'Rajiv Rao',     mobile:'9900033344',email:'rajiv@example.com',  studentSid:'ESLD0003ST'},
   ]);
   if(!get(K.C).length) set(K.C,[
     {id:'c1',grade:'4',section:'A'},{id:'c2',grade:'5',section:'A'},
@@ -1007,17 +967,11 @@ async function seedAppData(){
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   ID GENERATOR
-═══════════════════════════════════════════════════════════════ */
 function nextId(prefix, list, key){
   const nums = list.map(x=>parseInt((x[key]||'').replace(prefix,''),10)).filter(n=>!isNaN(n));
   return prefix + String((nums.length ? Math.max(...nums) : 0)+1).padStart(3,'0');
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MODAL
-═══════════════════════════════════════════════════════════════ */
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.addEventListener('click', e => { if(e.target.classList.contains('modal-bg')) e.target.classList.remove('open'); });
@@ -1030,9 +984,6 @@ function showCredentials(title, id, pw){
 }
 function copyCred(id){ navigator.clipboard?.writeText(document.getElementById(id).textContent||''); toast('Copied.','success'); }
 
-/* ═══════════════════════════════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════════════════════════════ */
 const VIEW_TITLES = { dashboard:'Dashboard Home', teachers:'Teacher Management', students:'Student Management', parents:'Parent Management', reports:'Reports & Analytics', settings:'School Settings' };
 let activeView = 'dashboard';
 function nav(btn){
@@ -1054,9 +1005,6 @@ function onViewOpen(v){
   if(v==='settings')  loadSettings();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   IDENTITY
-═══════════════════════════════════════════════════════════════ */
 function bootIdentity(){
   const cfg = getO(K.ST)||{};
   document.getElementById('topAid').textContent      = SES.id;
@@ -1067,9 +1015,6 @@ function bootIdentity(){
   document.getElementById('viewSub').textContent     = `${cfg.schoolName||SES.schoolName} · ${cfg.schoolCode||SES.schoolCode}`;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   CHART.JS
-═══════════════════════════════════════════════════════════════ */
 Chart.defaults.color        = '#8f9ab8';
 Chart.defaults.font.family  = 'Lexend';
 Chart.defaults.borderColor  = 'rgba(255,255,255,0.055)';
@@ -1077,11 +1022,30 @@ let _charts = {};
 function destroyChart(id){ if(_charts[id]){ _charts[id].destroy(); delete _charts[id]; } }
 function mkChart(id, cfg){ destroyChart(id); _charts[id] = new Chart(document.getElementById(id), cfg); }
 
-/* ═══════════════════════════════════════════════════════════════
-   DASHBOARD
-═══════════════════════════════════════════════════════════════ */
-function renderDashboard(){
+function liveStatsFor(sid){
+  const coins = Number(localStorage.getItem('coins-'+sid)) || 0;
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem('ml-history-'+sid)||'[]'); }catch(e){ hist = []; }
+  const accuracy = hist.length ? Math.round(hist.reduce((a,h)=>a+(parseFloat(h.accuracy)||0),0)/hist.length) : 0;
+  const todayKey = new Date().toISOString().slice(0,10);
+  const lastLogin = localStorage.getItem('lastLogin-'+sid);
+  const activeRecently = hist.some(h => h.date && (new Date() - new Date(h.date)) < 7*86400000) || lastLogin===todayKey;
+  return { coins, accuracy, sessions: hist.length, active: activeRecently };
+}
+function syncStudentLiveStats(){
   const students = get(K.S);
+  let changed = false;
+  const updated = students.map(s=>{
+    const live = liveStatsFor(s.sid);
+    if(live.coins!==s.coins || live.accuracy!==s.accuracy || live.active!==s.active){ changed = true; }
+    return {...s, coins:live.coins, accuracy:live.accuracy, active:live.active};
+  });
+  if(changed) set(K.S, updated);
+  return updated;
+}
+
+function renderDashboard(){
+  const students = syncStudentLiveStats();
   const teachers = get(K.T);
   const coins    = students.reduce((a,s)=>a+(s.coins||0),0);
   const avg      = students.length ? Math.round(students.reduce((a,s)=>a+(s.accuracy||0),0)/students.length) : 0;
@@ -1129,9 +1093,6 @@ function renderDashboard(){
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   TEACHERS
-═══════════════════════════════════════════════════════════════ */
 function buildSubjectFilter(){
   const sel = document.getElementById('t-filter');
   const saved = sel.value;
@@ -1221,7 +1182,7 @@ function saveTeacher(){
     const password = genPassword();
     list.push({tid,name,subject,email,mobile,joinDate,password});
     set(K.T,list); closeModal('modal-teacher'); buildSubjectFilter(); renderTeachers();
-    showCredentials('Teacher Account Created', tid, password);
+    showCredentials('Teacher Account Created — log in at teacher-login.html', tid, password);
   }
 }
 function resetTeacherPassword(){
@@ -1233,9 +1194,6 @@ function resetTeacherPassword(){
   showCredentials('Teacher Password Reset', tid, password);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   STUDENTS
-═══════════════════════════════════════════════════════════════ */
 function getFilteredStudents(){
   const students=get(K.S);
   const q   = (document.getElementById('s-srch').value||'').toLowerCase();
@@ -1248,7 +1206,7 @@ function getFilteredStudents(){
   return list;
 }
 function renderStudents(){
-  const students=get(K.S), teachers=get(K.T);
+  const students=syncStudentLiveStats(), teachers=get(K.T);
   const list = getFilteredStudents();
 
   const avg   = students.length ? Math.round(students.reduce((a,s)=>a+(s.accuracy||0),0)/students.length) : 0;
@@ -1291,7 +1249,7 @@ function openStudentModal(){
   const tSel = document.getElementById('s-teacher');
   tSel.innerHTML = '<option value="">— Unassigned —</option>'+teachers.map(t=>`<option value="${t.tid}">${t.name} (${t.tid})</option>`).join('');
   document.getElementById('s-reset-pw-btn').style.display = 'none';
-  document.getElementById('s-pw-hint').textContent = 'This student will log in with the Student ID shown after saving, and default password ESLD@123.';
+  document.getElementById('s-pw-hint').textContent = 'This student will log in at student-login.html with the Student ID shown after saving, and default password ESLD@123.';
   openModal('modal-student');
 }
 function editStudent(sid){
@@ -1330,19 +1288,16 @@ async function saveStudent(){
     set(K.S,list); closeModal('modal-student'); renderStudents();
     toast(`Student ${eid} updated.`,'success');
   } else {
-    const sid=nextId('SID',list,'sid');
+    const sid=genStudentId(list);
     const passwordHash = await sha256(DEFAULT_STUDENT_PW);
     const cfg = getO(K.ST)||{};
-    // A brand-new student always starts at 0 accuracy / 0 coins / inactive —
-    // real progress only ever comes from ml-history-*/coins-* localStorage
-    // once they actually play a game (see student-progress.html).
     list.push({sid,name,classGrade,age,gender,need,teacherTid,email,studentEmail:email,pMobile,parentMobile:pMobile,
       accuracy:0, coins:0,
       active:false, joinDate:new Date().toISOString().split('T')[0],
       passwordHash, pwPlain:DEFAULT_STUDENT_PW,
       schoolCode:cfg.schoolCode||(SES&&SES.schoolCode)||'', schoolName:cfg.schoolName||(SES&&SES.schoolName)||''});
     set(K.S,list); closeModal('modal-student'); renderStudents();
-    showCredentials('Student Account Created', sid, DEFAULT_STUDENT_PW);
+    showCredentials('Student Account Created — log in at student-login.html', sid, DEFAULT_STUDENT_PW);
   }
 }
 async function resetStudentPassword(){
@@ -1354,32 +1309,18 @@ async function resetStudentPassword(){
   showCredentials('Student Password Reset', sid, DEFAULT_STUDENT_PW);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   EXCEL EXPORTS
-   - Student export: student info + assigned TEACHER NAME ONLY.
-     Never includes teacher ID or teacher password.
-   - Teacher credentials export: a SEPARATE file with Teacher ID
-     and password only (for the admin to hand to each teacher).
-═══════════════════════════════════════════════════════════════ */
 function exportStudentsExcel(){
   if(typeof XLSX === 'undefined'){ toast('Excel export library failed to load — check your internet connection.','error'); return; }
   const teachers = get(K.T);
-  const list = getFilteredStudents(); // respects current search/filter
+  const list = getFilteredStudents();
   if(!list.length){ toast('No students to export.','error'); return; }
   const rows = list.map(s=>{
     const t = teachers.find(x=>x.tid===s.teacherTid);
     return {
-      'Student ID': s.sid,
-      'Name': s.name,
-      'Class': s.classGrade,
-      'Learning Need': s.need,
-      'Assigned Teacher': t ? t.name : 'Unassigned',
-      'Accuracy %': s.accuracy,
-      'Coins': s.coins,
-      'Status': s.active ? 'Active' : 'Inactive',
-      'Student Login ID': s.sid,
-      'Student Password': s.pwPlain || '(changed by student)',
-      'Parent Mobile': s.pMobile || '',
+      'Student ID': s.sid, 'Name': s.name, 'Class': s.classGrade, 'Learning Need': s.need,
+      'Assigned Teacher': t ? t.name : 'Unassigned', 'Accuracy %': s.accuracy, 'Coins': s.coins,
+      'Status': s.active ? 'Active' : 'Inactive', 'Student Login ID': s.sid,
+      'Student Password': s.pwPlain || '(changed by student)', 'Parent Mobile': s.pMobile || '',
     };
   });
   const ws = XLSX.utils.json_to_sheet(rows);
@@ -1395,11 +1336,7 @@ function exportTeacherCredentialsExcel(){
   const list = getFilteredTeachers();
   if(!list.length){ toast('No teachers to export.','error'); return; }
   const rows = list.map(t=>({
-    'Teacher ID': t.tid,
-    'Name': t.name,
-    'Subject': t.subject,
-    'Email': t.email,
-    'Mobile': t.mobile,
+    'Teacher ID': t.tid, 'Name': t.name, 'Subject': t.subject, 'Email': t.email, 'Mobile': t.mobile,
     'Password': t.password || '(not set — open teacher and use Reset Password)',
   }));
   const ws = XLSX.utils.json_to_sheet(rows);
@@ -1410,9 +1347,6 @@ function exportTeacherCredentialsExcel(){
   toast('Teacher ID + password file exported separately.','success');
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   PARENTS
-═══════════════════════════════════════════════════════════════ */
 function renderParents(){
   const parents=get(K.P), students=get(K.S);
   const q = (document.getElementById('p-srch').value||'').toLowerCase();
@@ -1484,9 +1418,6 @@ function saveParent(){
   set(K.P,list); closeModal('modal-parent'); renderParents();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DELETE (shared confirm)
-═══════════════════════════════════════════════════════════════ */
 function askDelete(type, id, name){
   const msgs={
     teacher:`"${name}" will be removed and their assigned students will be unassigned.`,
@@ -1518,11 +1449,8 @@ function doDelete(type, id){
   closeModal('modal-confirm');
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   REPORTS
-═══════════════════════════════════════════════════════════════ */
 function renderReports(){
-  const students = get(K.S);
+  const students = syncStudentLiveStats();
   const needAvg={Dyslexia:[],Dysgraphia:[],ADHD:[],Dyscalculia:[]};
   students.forEach(s=>{ if(needAvg[s.need]) needAvg[s.need].push(s.accuracy||0); });
   const avgOf = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
@@ -1568,9 +1496,6 @@ function renderReports(){
     : `<tr><td class="td-empty" colspan="7">No students currently flagged. 🎉</td></tr>`;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SETTINGS
-═══════════════════════════════════════════════════════════════ */
 function loadSettings(){
   const cfg=getO(K.ST)||{};
   document.getElementById('set-sname').value     = cfg.schoolName||'';
@@ -1643,9 +1568,6 @@ function addClass(){
   renderClasses();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async ()=>{
   await seedDemoAdmin();
   const existingSession = getO(SESSION_KEY);
