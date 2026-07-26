@@ -22,7 +22,6 @@ Env:  MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, ANTHROPIC_API_KEY,
 
 Install:  pip install flask flask-cors flask-mysqldb bcrypt requests google-auth
 """
-from flask_mysqldb import MySQL
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import pymysql
@@ -49,7 +48,27 @@ app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', '')
 app.config['MYSQL_DB']       = os.getenv('MYSQL_DB', 'esld')
 app.config['MYSQL_PORT']     = int(os.getenv('MYSQL_PORT', 3306))
 
-mysql = MySQL(app)
+class _MySQLShim:
+    """Drop-in replacement for flask_mysqldb.MySQL, backed by PyMySQL
+    (pure-Python — no mysqlclient/pkg-config build step needed)."""
+    def __init__(self, app):
+        self.app = app
+        self._conn = None
+
+    @property
+    def connection(self):
+        if self._conn is None or not self._conn.open:
+            self._conn = pymysql.connect(
+                host=self.app.config['MYSQL_HOST'],
+                user=self.app.config['MYSQL_USER'],
+                password=self.app.config['MYSQL_PASSWORD'],
+                database=self.app.config['MYSQL_DB'],
+                port=self.app.config['MYSQL_PORT'],
+                autocommit=False,
+            )
+        return self._conn
+
+mysql = _MySQLShim(app)
 
 VALID_MODULES = {'dyslexia', 'dysgraphia', 'adhd'}
 
