@@ -41,6 +41,75 @@ app = Flask(__name__)
 # Allow all origins for every route (handles OPTIONS pre-flight automatically)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+import sqlite3
+import re
+
+class _SQLiteCursorWrapper:
+    def __init__(self, sqlite_cur):
+        self._cur = sqlite_cur
+
+    def execute(self, query, args=None):
+        q = query
+        if args is not None:
+            q = q.replace('%s', '?')
+        q = re.sub(r'INSERT IGNORE INTO', 'INSERT OR IGNORE INTO', q, flags=re.IGNORECASE)
+        if args is None:
+            return self._cur.execute(q)
+        else:
+            return self._cur.execute(q, args)
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+    @property
+    def lastrowid(self):
+        return self._cur.lastrowid
+
+    @property
+    def rowcount(self):
+        return self._cur.rowcount
+
+    def close(self):
+        pass
+
+class _SQLiteConnWrapper:
+    def __init__(self, db_path='esld.db'):
+        self.db_path = db_path
+        self._conn = sqlite3.connect(self.db_path, check_same_thread=False)
+        self._init_db()
+
+    def _init_db(self):
+        schema_path = os.path.join(os.path.dirname(__file__), 'schema.sql')
+        if os.path.exists(schema_path):
+            with open(schema_path, 'r', encoding='utf-8') as f:
+                sql = f.read()
+            sql = re.sub(r'CREATE DATABASE.*?;', '', sql, flags=re.IGNORECASE)
+            sql = re.sub(r'USE esld;', '', sql, flags=re.IGNORECASE)
+            sql = re.sub(r'ENUM\([^)]+\)', 'TEXT', sql, flags=re.IGNORECASE)
+            sql = re.sub(r'INT AUTO_INCREMENT PRIMARY KEY', 'INTEGER PRIMARY KEY AUTOINCREMENT', sql, flags=re.IGNORECASE)
+            sql = re.sub(r'INSERT IGNORE INTO', 'INSERT OR IGNORE INTO', sql, flags=re.IGNORECASE)
+            sql = re.sub(r'UNIQUE KEY \w+\s*\(', 'UNIQUE (', sql, flags=re.IGNORECASE)
+            sql = re.sub(r'^\s*KEY \w+\s*\([^)]+\),?\n', '', sql, flags=re.IGNORECASE | re.MULTILINE)
+            cur = self._conn.cursor()
+            cur.executescript(sql)
+            self._conn.commit()
+
+    def cursor(self):
+        return _SQLiteCursorWrapper(self._conn.cursor())
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    @property
+    def open(self):
+        return True
+
 # ── MySQL config (all values come from environment) ──────────────────────────
 app.config['MYSQL_HOST']     = os.getenv('MYSQL_HOST', 'localhost')
 app.config['MYSQL_USER']     = os.getenv('MYSQL_USER', 'root')
@@ -50,15 +119,20 @@ app.config['MYSQL_PORT']     = int(os.getenv('MYSQL_PORT', 3306))
 
 class _MySQLShim:
     """Drop-in replacement for flask_mysqldb.MySQL, backed by PyMySQL
-    (pure-Python — no mysqlclient/pkg-config build step needed)."""
+    with automatic SQLite fallback if MySQL is unreachable/unconfigured."""
     def __init__(self, app):
         self.app = app
         self._conn = None
+        self._mode = None
 
     @property
     def connection(self):
-        if self._conn is None or not self._conn.open:
-            self._conn = pymysql.connect(
+        if self._conn is not None and getattr(self._conn, 'open', True):
+            return self._conn
+
+        # Attempt MySQL connection first
+        try:
+            conn = pymysql.connect(
                 host=self.app.config['MYSQL_HOST'],
                 user=self.app.config['MYSQL_USER'],
                 password=self.app.config['MYSQL_PASSWORD'],
@@ -66,6 +140,41 @@ class _MySQLShim:
                 port=self.app.config['MYSQL_PORT'],
                 autocommit=False,
             )
+            self._conn = conn
+            self._mode = 'mysql'
+            print("[ESLD Backend] Connected to MySQL database successfully.")
+            return self._conn
+        except Exception as err:
+            if isinstance(err, pymysql.err.OperationalError) and len(err.args) > 0 and err.args[0] == 1049:
+                try:
+                    conn_server = pymysql.connect(
+                        host=self.app.config['MYSQL_HOST'],
+                        user=self.app.config['MYSQL_USER'],
+                        password=self.app.config['MYSQL_PASSWORD'],
+                        port=self.app.config['MYSQL_PORT'],
+                        autocommit=True
+                    )
+                    with conn_server.cursor() as c:
+                        c.execute(f"CREATE DATABASE IF NOT EXISTS `{self.app.config['MYSQL_DB']}` CHARACTER SET utf8mb4;")
+                    conn_server.close()
+                    self._conn = pymysql.connect(
+                        host=self.app.config['MYSQL_HOST'],
+                        user=self.app.config['MYSQL_USER'],
+                        password=self.app.config['MYSQL_PASSWORD'],
+                        database=self.app.config['MYSQL_DB'],
+                        port=self.app.config['MYSQL_PORT'],
+                        autocommit=False,
+                    )
+                    self._mode = 'mysql'
+                    print("[ESLD Backend] Created and connected to MySQL database 'esld'.")
+                    return self._conn
+                except Exception as e2:
+                    print(f"[ESLD Backend] MySQL auto-create failed: {e2}. Falling back to SQLite.")
+            else:
+                print(f"[ESLD Backend] MySQL connection unavailable ({err}). Falling back to embedded SQLite database (esld.db).")
+
+        self._conn = _SQLiteConnWrapper()
+        self._mode = 'sqlite'
         return self._conn
 
 mysql = _MySQLShim(app)
